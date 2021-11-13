@@ -40,6 +40,9 @@ const setOpacity = (peekTime, window_actor, targetOpacity, cb) => {
     Tweener.addTween(window_actor, tweenConfig);
 };
 
+var windowTimeOut;
+var openWindowTimeOut;
+
 class AppMenuButtonRightClickMenu extends Applet.AppletPopupMenu {
     constructor(params, orientation) {
         super(params, orientation);
@@ -977,7 +980,8 @@ class AppThumbnailHoverMenu extends PopupMenu.PopupMenu {
             return;
         }
         this.shouldClose = true;
-        setTimeout(() => this.close(), this.state.settings.thumbTimeout);
+        clearTimeout(openWindowTimeOut);
+        windowTimeOut = setTimeout(() => this.close(), this.state.settings.thumbTimeout);
     }
 
     onMenuEnter(actor) {
@@ -1002,7 +1006,8 @@ class AppThumbnailHoverMenu extends PopupMenu.PopupMenu {
             this.groupState.set({thumbnailMenuEntered: this.isOpen});
         }
 
-        setTimeout(() => this.open(), timeout);
+        clearTimeout(windowTimeOut);
+        openWindowTimeOut = setTimeout(() => this.open(), timeout);
     }
 
     onMenuLeave(actor) {
@@ -1016,7 +1021,8 @@ class AppThumbnailHoverMenu extends PopupMenu.PopupMenu {
             this.groupState.set({thumbnailMenuEntered: false});
         }
 
-        setTimeout(() => this.close(), 50);
+        clearTimeout(openWindowTimeOut);
+        windowTimeOut = setTimeout(() => this.close(), this.state.settings.thumbCloseTimeout);
     }
 
     onKeyRelease(actor, event) {
